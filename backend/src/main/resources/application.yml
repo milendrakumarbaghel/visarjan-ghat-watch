@@ -9,9 +9,10 @@ spring:
     # Copy backend/.env.example to backend/.env and fill it in.
     import: optional:file:.env[.properties]
   datasource:
-    # The database is created on first start if it does not exist.
-    url: ${DB_URL:jdbc:mysql://localhost:3306/ghat_watch?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Kolkata}
-    username: ${DB_USER:root}
+    # Connection details come from backend/.env (git-ignored) or environment variables.
+    # Never put a real password in this file.
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/ghat_watch}
+    username: ${DB_USER:postgres}
     password: ${DB_PASSWORD:}
   sql:
     init:

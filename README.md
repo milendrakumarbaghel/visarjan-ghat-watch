@@ -52,15 +52,15 @@ Also included: water analytics (ghat, year and festival comparison), a map of th
 
 ## 🚀 How to run it (5 steps)
 
-**You need:** Java 25 · Maven 3.9+ · Node 20+ · MySQL 8
+**You need:** Java 25 · Maven 3.9+ · Node 20+ · a PostgreSQL 14+ database (local, or hosted such as Neon)
 
 1. **Get the code:** `git clone <this repo>` and `cd` into it.
-2. **Add your MySQL login:** copy `backend/.env.example` to `backend/.env` and fill in `DB_USER` and `DB_PASSWORD`. The file is never committed.
+2. **Add your database login:** copy `backend/.env.example` to `backend/.env` and fill in `DB_URL`, `DB_USER` and `DB_PASSWORD`. The file is git-ignored, so credentials never reach GitHub.
 3. **Build the frontend:** `cd frontend` → `npm install` → `npm run build`
 4. **Start the tool:** `cd ../backend` → `mvn spring-boot:run`
 5. **Open http://localhost:8080**
 
-On first start the backend creates the `ghat_watch` database and loads all the data. The app, the API and the source PDFs are all served from that one address.
+On first start the backend creates its tables and loads all the data. The app, the API and the source PDFs are all served from that one address.
 
 **More options**
 
@@ -69,7 +69,7 @@ On first start the backend creates the `ghat_watch` database and loads all the d
 | One file for a server | After step 3, run `mvn package` in `backend`, then `java -jar target/ghat-watch-backend-1.0.0.jar` from the `backend` folder |
 | Work on the code | Run `npm run dev` in `frontend` while the backend runs, and open http://localhost:5173 |
 | Change settings | In `backend/.env`: `DB_URL`, `PORT`, `ALLOWED_ORIGINS` (CORS, dev server only) |
-| Run the tests | `mvn test` in `backend`. No MySQL needed: tests use an in-memory database in MySQL mode |
+| Run the tests | `mvn test` in `backend`. No database needed: tests use an in-memory database in PostgreSQL mode |
 
 **No API keys or secrets** are in the code. The tool connects to **no government system**. The only outside calls are map tiles (OpenStreetMap / Esri, map page only) and WhatsApp, when the officer chooses to share.
 
@@ -112,7 +112,7 @@ The engine is in [RiskEngine.java](backend/src/main/java/com/ghatwatch/risk/Risk
 ### ✅ Works
 - Ranking of all 7 ghats (all festivals or Durga only), with reasons in English and Hindi and page-level links to the PDFs
 - Evidence grid per ghat. Missing, BDL and "no table in report" each look different
-- Action plan saved in MySQL. It survives restarts and feeds the brief and field sheets
+- Action plan saved in PostgreSQL. It survives restarts and feeds the brief and field sheets
 - Brief as an A4 PDF in English and Hindi: letterhead, numbered sections, ranking table, sources, sign-off
 - **Share PDF on WhatsApp** through the phone or Windows share menu. Where a browser can't share files, the PDF downloads and WhatsApp opens
 - Test schedule with a calendar file, and a field sheet per ghat (PDF)
@@ -163,7 +163,7 @@ The report PDFs are bundled so that every page link works offline.
 
 | Part | Built with |
 |---|---|
-| Backend | Spring Boot 4.1 · Java 25 · Spring Data JPA · MySQL 8 |
+| Backend | Spring Boot 4.1 · Java 25 · Spring Data JPA · PostgreSQL |
 | Frontend | React 19 · TypeScript · Vite · Tailwind CSS 4 · Recharts · Leaflet |
 | PDF brief and field sheets | html-to-image + jsPDF, made in the browser (keeps Hindi shaping correct) |
 
@@ -173,7 +173,7 @@ backend/
   service/    ranking, action plan, bilingual brief, new readings
   web/        REST API: /api/ranking, /api/ranking.csv, /api/ghats/{id}, /api/readings,
               /api/trend, /api/plan, /api/brief, /api/field-readings, /api/meta
-  seed/       loads the CSVs into MySQL on first start
+  seed/       loads the CSVs into PostgreSQL on first start
   resources/  schema.sql (ghat, reading, cpcb_criterion, action_plan, field_reading), data, report PDFs
 frontend/
   pages/      Home · Dashboard · Rankings · Ghat detail · Map · Analytics · Evidence ·

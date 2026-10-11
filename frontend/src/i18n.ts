@@ -355,8 +355,8 @@ const strings = {
   loading: { en: 'Loading…', hi: 'लोड हो रहा है…' },
   errorTitle: { en: 'Could not reach the Ghat Watch server', hi: 'घाट वॉच सर्वर से संपर्क नहीं हो सका' },
   errorHelp: {
-    en: 'Check that the backend is running on port 8080 and MySQL is up, then try again.',
-    hi: 'जाँचें कि बैकएंड पोर्ट 8080 पर चल रहा है और MySQL चालू है, फिर कोशिश करें।',
+    en: 'Check that the backend is running on port 8080 and the database is reachable, then try again.',
+    hi: 'जाँचें कि बैकएंड पोर्ट 8080 पर चल रहा है और डेटाबेस से जुड़ा है, फिर कोशिश करें।',
   },
   retry: { en: 'Try again', hi: 'फिर कोशिश करें' },
   openPage: { en: 'Open report page', hi: 'रिपोर्ट का पृष्ठ खोलें' },

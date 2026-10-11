@@ -13,9 +13,9 @@ import java.net.http.HttpResponse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/** Boots the whole app on an in-memory database in MySQL mode and calls the API over HTTP. */
+/** Boots the whole app on an in-memory database in PostgreSQL mode and calls the API over HTTP. */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = {
-        "spring.datasource.url=jdbc:h2:mem:ghatwatch;MODE=MySQL;DATABASE_TO_LOWER=TRUE;NON_KEYWORDS=VALUE",
+        "spring.datasource.url=jdbc:h2:mem:ghatwatch;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH;NON_KEYWORDS=VALUE",
         "spring.datasource.username=sa",
         "spring.datasource.password="
 })

@@ -61,9 +61,21 @@ public class GhatWatchService {
         this.visarjanDate = visarjanDate;
     }
 
+    /** The report readings never change once loaded, so they are read from the database once. */
+    private volatile List<Reading> reportReadingsCache;
+
+    private List<Reading> reportReadings() {
+        List<Reading> cached = reportReadingsCache;
+        if (cached == null || cached.isEmpty()) {
+            cached = List.copyOf(readings.findAll());
+            reportReadingsCache = cached;
+        }
+        return cached;
+    }
+
     /** MPPCB report readings plus readings typed in after a visarjan. */
     public List<Reading> allReadings() {
-        List<Reading> all = new java.util.ArrayList<>(readings.findAll());
+        List<Reading> all = new java.util.ArrayList<>(reportReadings());
         fieldReadings.findAll().forEach(f -> all.add(f.toReading(Units.of(f.getParameter()))));
         return all;
     }

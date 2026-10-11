@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +28,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Loads the data pack into MySQL on first start. Tables that already hold rows are left alone,
+ * Loads the data pack into the database on first start. Tables that already hold rows are left alone,
  * so the officer's saved action plan survives restarts.
  */
 @Component
@@ -41,8 +42,11 @@ public class DataSeeder implements ApplicationRunner {
     private final GhatRepository ghats;
     private final ReadingRepository readings;
     private final CpcbCriterionRepository criteria;
+    private final JdbcTemplate jdbc;
 
-    public DataSeeder(GhatRepository ghats, ReadingRepository readings, CpcbCriterionRepository criteria) {
+    public DataSeeder(GhatRepository ghats, ReadingRepository readings, CpcbCriterionRepository criteria,
+                      JdbcTemplate jdbc) {
+        this.jdbc = jdbc;
         this.ghats = ghats;
         this.readings = readings;
         this.criteria = criteria;
@@ -75,7 +79,26 @@ public class DataSeeder implements ApplicationRunner {
                 }
                 rows.add(toReading(ghatId, r));
             }
-            readings.saveAll(rows);
+            // One batched insert: row-by-row inserts take minutes against a hosted database far away.
+            jdbc.batchUpdate("""
+                    INSERT INTO reading (ghat_id, report_year, festival, phase, parameter, value, unit_assumed, flag,
+                        value_as_printed, parameter_as_printed, site_as_printed, site_match_confidence, source_page)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                    rows, 500, (ps, r) -> {
+                        ps.setString(1, r.getGhatId());
+                        ps.setInt(2, r.getYear());
+                        ps.setString(3, r.getFestival());
+                        ps.setString(4, r.getPhase());
+                        ps.setString(5, r.getParameter());
+                        ps.setBigDecimal(6, r.getValue());
+                        ps.setString(7, r.getUnitAssumed());
+                        ps.setString(8, r.getFlag());
+                        ps.setString(9, r.getValueAsPrinted());
+                        ps.setString(10, r.getParameterAsPrinted());
+                        ps.setString(11, r.getSiteAsPrinted());
+                        ps.setString(12, r.getSiteMatchConfidence());
+                        ps.setInt(13, r.getSourcePage());
+                    });
             log.info("Seeded {} readings", rows.size());
         }
     }
