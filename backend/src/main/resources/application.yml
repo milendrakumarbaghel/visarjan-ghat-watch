@@ -27,4 +27,4 @@ spring:
 
 ghat-watch:
   # Front-end origins allowed to call the API (comma separated).
-  allowed-origins: ${ALLOWED_ORIGINS:http://localhost:5173}
+  allowed-origins: ${ALLOWED_ORIGINS:http://localhost:5173,https://visarjan-ghat-watch-frontend.vercel.app}

@@ -4,6 +4,8 @@
 
 **Track 2: Visarjan Ghat Watch** · Claude Impact Lab × Cerebras Café Compute, Bhopal · 11 October 2026
 
+**🌐 Live demo:** https://visarjan-ghat-watch-frontend.vercel.app/ · API: https://fabulous-eagerness-production-307b.up.railway.app/api/meta
+
 ---
 
 ## 👥 Team
@@ -68,7 +70,7 @@ On first start the backend creates its tables and loads all the data. The app, t
 |---|---|
 | One file for a server | After step 3, run `mvn package` in `backend`, then `java -jar target/ghat-watch-backend-1.0.0.jar` from the `backend` folder |
 | Work on the code | Run `npm run dev` in `frontend` while the backend runs, and open http://localhost:5173 |
-| Change settings | In `backend/.env`: `DB_URL`, `PORT`, `ALLOWED_ORIGINS` (CORS, dev server only) |
+| Change settings | In `backend/.env`: `DB_URL`, `PORT`, `ALLOWED_ORIGINS` (CORS; defaults to the dev server and the Vercel frontend) |
 | Run the tests | `mvn test` in `backend`. No database needed: tests use an in-memory database in PostgreSQL mode |
 
 **No API keys or secrets** are in the code. The tool connects to **no government system**. The only outside calls are map tiles (OpenStreetMap / Esri, map page only) and WhatsApp, when the officer chooses to share.
