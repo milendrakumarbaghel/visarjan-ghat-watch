@@ -1,0 +1,29 @@
+server:
+  port: ${PORT:8080}
+
+spring:
+  application:
+    name: ghat-watch
+  config:
+    # Local settings such as DB_PASSWORD live in backend/.env, which is never committed.
+    # Copy backend/.env.example to backend/.env and fill it in.
+    import: optional:file:.env[.properties]
+  datasource:
+    # The database is created on first start if it does not exist.
+    url: ${DB_URL:jdbc:mysql://localhost:3306/ghat_watch?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Kolkata}
+    username: ${DB_USER:root}
+    password: ${DB_PASSWORD:}
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
+      encoding: UTF-8
+  jpa:
+    open-in-view: false
+    hibernate:
+      # schema.sql owns the tables.
+      ddl-auto: none
+
+ghat-watch:
+  # Front-end origins allowed to call the API (comma separated).
+  allowed-origins: ${ALLOWED_ORIGINS:http://localhost:5173}

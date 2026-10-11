@@ -1,0 +1,202 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter Variable", "Inter", "Noto Sans Devanagari", "Segoe UI", system-ui, -apple-system, "Nirmala UI", "Mangal", sans-serif;
+
+  /* Lake teal, as in the design's buttons and active states. */
+  --color-brand-50: #effcf9;
+  --color-brand-100: #d2f5ee;
+  --color-brand-200: #a6eadd;
+  --color-brand-300: #6fd6c5;
+  --color-brand-500: #1aa594;
+  --color-brand-600: #10897b;
+  --color-brand-700: #0e6f65;
+  --color-brand-800: #0f5952;
+  --color-brand-900: #103f3b;
+
+  /* Navy of the sidebar and headings. */
+  --color-ink-950: #071b23;
+  --color-ink-900: #0b2530;
+  --color-ink-800: #0f2f3b;
+  --color-ink-700: #17404e;
+  --color-ink-600: #22505f;
+
+  --color-page: #f3f5f8;
+
+  --shadow-card: 0 1px 2px rgb(16 24 40 / 0.04), 0 1px 3px rgb(16 24 40 / 0.06);
+  --shadow-lift: 0 10px 24px -8px rgb(16 24 40 / 0.14), 0 2px 6px rgb(16 24 40 / 0.06);
+}
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    @apply bg-page text-[15px] text-slate-800 antialiased;
+    font-feature-settings: "cv11", "ss01";
+  }
+  :lang(hi) body,
+  body:lang(hi) {
+    line-height: 1.6;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply text-ink-900;
+    letter-spacing: -0.01em;
+  }
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-brand-500;
+  }
+  ::selection {
+    @apply bg-brand-100 text-brand-900;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-2xl border border-slate-200/80 bg-white shadow-card;
+  }
+  .card-hover {
+    @apply transition duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-lift;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold whitespace-nowrap transition duration-150 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-sm {
+    @apply rounded-lg px-3 py-1.5 text-[13px];
+  }
+  .btn-primary {
+    @apply bg-brand-600 text-white shadow-sm shadow-brand-900/20 hover:bg-brand-700;
+  }
+  .btn-outline {
+    @apply bg-white text-slate-700 ring-1 ring-slate-200 hover:bg-slate-50 hover:text-slate-900 hover:ring-slate-300;
+  }
+  .btn-soft {
+    @apply bg-brand-50 text-brand-800 ring-1 ring-brand-200 hover:bg-brand-100 hover:ring-brand-300;
+  }
+  .btn-ghost {
+    @apply text-slate-600 hover:bg-slate-100 hover:text-slate-900;
+  }
+
+  .field {
+    @apply w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 transition placeholder:text-slate-400 hover:border-slate-300 focus:border-brand-500 focus:ring-4 focus:ring-brand-100 focus:outline-none;
+  }
+
+  .eyebrow {
+    @apply text-[11px] font-semibold tracking-[0.08em] text-slate-500 uppercase;
+  }
+
+  .link {
+    @apply font-medium text-brand-700 underline-offset-2 hover:text-brand-800 hover:underline;
+  }
+}
+
+/* Cells and segments with no test result: hatched so they never read as "clean". */
+.missing-hatch {
+  background-image: repeating-linear-gradient(-45deg, rgb(226 232 240) 0 6px, rgb(248 250 252) 6px 12px);
+}
+
+/* Thin, quiet scrollbars inside cards. */
+.scroll-thin {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(203 213 225) transparent;
+}
+
+/* Map pins */
+.ghat-pin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px 9999px 9999px 0;
+  transform: rotate(-45deg);
+  border: 3px solid white;
+  box-shadow: 0 4px 10px rgb(0 0 0 / 0.35);
+  transition: transform 0.15s ease;
+}
+.ghat-pin span {
+  transform: rotate(45deg);
+  font-weight: 700;
+  font-size: 13px;
+}
+.ghat-pin.is-selected {
+  box-shadow: 0 0 0 6px rgb(255 255 255 / 0.45), 0 6px 14px rgb(0 0 0 / 0.4);
+}
+.leaflet-container {
+  font-family: inherit;
+  background: #0b2530;
+}
+.leaflet-tooltip {
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.18);
+  font-weight: 600;
+  padding: 4px 8px;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.animate-rise {
+  animation: rise 0.35s ease-out both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-rise,
+  .card-hover {
+    animation: none;
+    transition: none;
+  }
+}
+
+@page {
+  size: A4;
+  margin: 14mm 13mm 16mm;
+  @bottom-right {
+    content: "Page " counter(page) " / " counter(pages);
+    font: 8pt "Inter", "Noto Sans Devanagari", sans-serif;
+    color: #64748b;
+  }
+  @bottom-left {
+    content: "Visarjan Ghat Watch · Durga Visarjan 2026";
+    font: 8pt "Inter", "Noto Sans Devanagari", sans-serif;
+    color: #64748b;
+  }
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  html,
+  body {
+    background: white !important;
+    font-size: 10.5pt;
+  }
+  /* Keep the letterhead rule, tier colours and table header when printing. */
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .brief-doc table {
+    page-break-inside: auto;
+  }
+  .brief-doc tr {
+    page-break-inside: avoid;
+  }
+  .brief-doc thead {
+    display: table-header-group;
+  }
+  .print-area {
+    box-shadow: none !important;
+    border: none !important;
+  }
+}
